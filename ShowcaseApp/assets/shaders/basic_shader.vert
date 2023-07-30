@@ -9,6 +9,8 @@ layout (location = 3) in vec2 uv;        // Texture coordinates (UV)
 // Output variables
 out vec4 vertexColor;  // Interpolated vertex color
 out vec2 texCoord;     // Interpolated texture coordinates (UV)
+out vec2 InterpolatedTexCoord; // Send the corrected texture coordinate to the fragment shader
+
 
 // Uniform variables
 uniform mat4 view;       // View matrix

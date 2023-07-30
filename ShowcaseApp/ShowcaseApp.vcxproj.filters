@@ -57,6 +57,9 @@
     <ClCompile Include="external\shared\stb_image\stb.cpp">
       <Filter>Source Files\external\stb</Filter>
     </ClCompile>
+    <ClCompile Include="src\texture.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\application.h">
@@ -78,6 +81,9 @@
       <Filter>Source Files\include</Filter>
     </ClInclude>
     <ClInclude Include="include\camera.h">
+      <Filter>Source Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\texture.h">
       <Filter>Source Files\include</Filter>
     </ClInclude>
   </ItemGroup>

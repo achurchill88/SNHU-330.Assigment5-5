@@ -7,11 +7,13 @@
 #include <shader.h>
 #include <types.h>
 #include <camera.h>
+#include "texture.h"
 
 class Application {
 public:
     Application();  // Default constructor
     Application(std::string WindowTitle, int width, int height);  // Constructor with parameters
+
 
     void Run();  // Function to run the application
 
@@ -35,6 +37,7 @@ private:
 
     Camera _camera;
     std::vector<Mesh> _meshes;  // Vector to store meshes in the scene
+    std::vector<Texture> _textures;
     Shader _shader;  // Shader object for rendering
     bool _running{false};  // Flag indicating whether the application is running
 
@@ -43,6 +46,4 @@ private:
     glm::vec2 _cameraLookSpeed {};  // Speed at which the camera looks around
 
     float _lastFrameTime { 1.f };  // Time of the last frame for deltaTime calculation
-
-    GLuint _containerTexture;  // OpenGL ID for the container texture
 };

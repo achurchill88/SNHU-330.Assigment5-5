@@ -60,18 +60,17 @@ void Cylinder::generateVertices()
         Vertex sideVertexTop;
         sideVertexTop.Position = glm::vec3(x, height / 2.0f, z);
         sideVertexTop.Normal = glm::normalize(glm::vec3(x, 0.0f, z));
-        sideVertexTop.Uv = glm::vec2(static_cast<float>(i) / sectors, 1.0f);
-        sideVertexTop.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
+        sideVertexTop.Uv = glm::vec2(1.0f - static_cast<float>(i) / sectors, 1.0f); // Corrected Uv calculation for top side vertices
         vertices.push_back(sideVertexTop);
 
         Vertex sideVertexBottom;
         sideVertexBottom.Position = glm::vec3(x, -height / 2.0f, z);
         sideVertexBottom.Normal = glm::normalize(glm::vec3(x, 0.0f, z));
-        sideVertexBottom.Uv = glm::vec2(static_cast<float>(i) / sectors, 0.0f);
-        sideVertexBottom.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
+        sideVertexBottom.Uv = glm::vec2(1.0f - static_cast<float>(i) / sectors, 0.0f); // Corrected Uv calculation for bottom side vertices (flipped U)
         vertices.push_back(sideVertexBottom);
     }
 }
+
 
 void Cylinder::generateIndices()
 {

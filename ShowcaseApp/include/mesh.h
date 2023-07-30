@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 #include "types.h"
+#include "texture.h"
 
 class Mesh {
 public:
@@ -22,6 +23,8 @@ public:
             vertex.Color = color;
         }
     }
+    void SetTextures(const std::vector<Texture>& textures) { _textures = textures; }
+    std::vector<Texture>& GetTextures() { return _textures; }
 
 private:
     uint32_t _elementCount{ 0 };  // Number of elements (indices)
@@ -32,4 +35,5 @@ private:
 
     std::vector<Vertex> _vertices;  // Vector to store the vertices of the mesh
     std::vector<uint32_t> _indices;  // Vector to store the indices of the mesh
+    std::vector<Texture> _textures; // Vector to store textures associated with the mesh
 };

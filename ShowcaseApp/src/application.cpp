@@ -88,11 +88,11 @@ bool Application::openWindow() {
     }
     glEnable(GL_DEPTH_TEST);
     return true;  // Return true if window opening and initialization succeed
+
 }
 
 void Application::setupInputs() {
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
-        // std::cout << "Key Button (" << key << ", " << scancode << ", " << action << ", " << mods<< ")" << std::endl;
         auto *app = reinterpret_cast<Application *>(glfwGetWindowUserPointer(window));
 
         switch (key) {
@@ -124,12 +124,60 @@ void Application::setupInputs() {
 
 // Function to set up the scene
 void Application::setupScene() {
-    // Create a pyramid mesh and add it to the "_meshes" container.
-    auto& pyramidA = _meshes.emplace_back(Shapes::pyramidVertices, Shapes::pyramidElements);
 
-    // Translate the position of "pyramidA" by (-1.f, 0.f, 0.f) using glm::translate.
-    // This moves the pyramid to the left along the X-axis.
-    pyramidA.Transform = glm::translate(pyramidA.Transform, glm::vec3(-1.f, 0.f, 0.f));
+    Path texturePath = std::filesystem::current_path() / "assets" / "textures";
+    _textures.emplace_back(texturePath / "bottle.jpg");
+    _textures.emplace_back(texturePath / "rootbeerLabel.jpg");
+
+    // Define the scale factor
+    float scaleFactor = 0.90f;
+
+    // Create a cylinder
+    float bottleRadius = 0.25f * scaleFactor; // Reduced radius
+    float bottleHeight = 2.25f * scaleFactor; // Reduced height
+    int bottleSectors = 64;
+    Cylinder cylinder(bottleRadius, bottleHeight, bottleSectors);
+    auto cylinderMesh = cylinder.GetMesh();
+    cylinderMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
+                             glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, bottleHeight / 2.0f, 0.0f)) *
+                             cylinderMesh.Transform;
+    cylinderMesh.SetTextures({_textures[1], _textures[0]});
+
+    _meshes.emplace_back(cylinderMesh);
+
+    // Create a conical frustum for the middle part of the bottle
+    float middleBottleTopRadius = 0.15f * scaleFactor; // Reduced top radius
+    float middleBottleBottomRadius = 0.25f * scaleFactor; // Reduced bottom radius
+    float middleBottleHeight = 0.5f * scaleFactor; // Reduced height
+    int middleBottleSectors = 64;
+    ConicalFrustum middleConicalFrustum(middleBottleTopRadius, middleBottleBottomRadius, middleBottleHeight,
+                                        middleBottleSectors);
+    auto middleConicalFrustumMesh = middleConicalFrustum.GetMesh();
+    middleConicalFrustumMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
+                                         glm::translate(glm::mat4(1.0f),
+                                                        glm::vec3(0.0f, bottleHeight + middleBottleHeight / 2.0f,
+                                                                  0.0f)) * middleConicalFrustumMesh.Transform;
+    middleConicalFrustumMesh.SetTextures({_textures[0]});
+    _meshes.emplace_back(middleConicalFrustumMesh);
+
+    // Create a conical frustum for the top part of the bottle
+    float topBottleTopRadius = 0.1f * scaleFactor; // Reduced top radius
+    float topBottleBottomRadius = 0.15f * scaleFactor; // Reduced bottom radius
+    float topBottleHeight = 1.5f * scaleFactor; // Reduced height
+    int topBottleSectors = 64;
+    ConicalFrustum topConicalFrustum(topBottleTopRadius, topBottleBottomRadius, topBottleHeight, topBottleSectors);
+    auto topConicalFrustumMesh = topConicalFrustum.GetMesh();
+    topConicalFrustumMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
+                                      glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,
+                                                                                bottleHeight + middleBottleHeight +
+                                                                                topBottleHeight / 2.0f, 0.0f)) *
+                                      topConicalFrustumMesh.Transform;
+    topConicalFrustumMesh.SetTextures({_textures[0]});
+    _meshes.emplace_back(topConicalFrustumMesh);
+
+    // Plane
+    _meshes.emplace_back(Shapes::tableTopVertices, Shapes::tableTopElements);
+
 
     // Set up the path to the "shaders" directory in the "assets" folder.
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
@@ -137,41 +185,6 @@ void Application::setupScene() {
     // Create a Shader object using the vertex and fragment shader files located in the "shaders" directory.
     _shader = Shader(shaderPath / "basic_shader.vert", shaderPath / "basic_shader.frag");
 
-    // Set up the path to the "textures" directory in the "assets" folder.
-    Path texturePath = std::filesystem::current_path() / "assets" / "textures";
-
-    // Create a full path to the "wall.jpg" texture file within the "textures" directory.
-    auto containerPath = (texturePath / "wall.jpg").string();
-
-    // Variables to store the width, height, and number of color channels of the loaded texture.
-    int width, height, numChannels;
-
-    // Use the STB image library to load the texture data from the "wall.jpg" file.
-    // The function stbi_load() loads the image data and provides information about the texture.
-    unsigned char* data = stbi_load(containerPath.c_str(), &width, &height, &numChannels, STBI_rgb_alpha);
-
-    // Generate a new OpenGL texture and bind it to the GL_TEXTURE_2D target.
-    // The texture's ID will be stored in the "_containerTexture" variable for future reference.
-    glGenTextures(1, &_containerTexture);
-    glBindTexture(GL_TEXTURE_2D, _containerTexture);
-
-    // Check if the texture data was loaded successfully.
-    if (data) {
-        // Allocate storage for the texture using glTexStorage2D, specifying the texture's format, width, and height.
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-
-        // Upload the texture data to the GPU using glTexSubImage2D.
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-        // Generate mipmaps for the texture to enable smooth rendering at different distances.
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        // If loading fails, print an error message to the standard error stream.
-        std::cerr << "Failed to load texture at path: " << containerPath << std::endl;
-    }
-
-    // Free the memory allocated for the loaded texture data, as it is no longer needed.
-    stbi_image_free(data);
 }
 
 
@@ -194,17 +207,19 @@ bool Application::draw() {
     _shader.SetMat4("projection", projection);
     _shader.SetMat4("view", view);
 
-    // Binds the OpenGL texture with ID _containerTexture to GL_TEXTURE_2D target for use in texture sampling and rendering.
-    glBindTexture(GL_TEXTURE_2D, _containerTexture);
+    // Loop through the meshes and draw them with their respective textures
+    for (size_t i = 0; i < _meshes.size(); i++) {
+        Mesh& mesh = _meshes[i];
+        std::vector<Texture>& textures = mesh.GetTextures();
+        
+        for (size_t j = 0; j < textures.size(); j++) {
+            glActiveTexture(GL_TEXTURE0 + j);
+            textures[j].Bind();
+            _shader.SetInt("tex" + std::to_string(j), j); // Set the uniform value dynamically
+        }
 
-//    bool _wireFrame{false};
-    for (auto &mesh: _meshes) {
-//        glPolygonMode(GL_FRONT_AND_BACK, _wireFrame ? GL_LINE : GL_FILL);
-        mesh.Transform = glm::rotate(mesh.Transform, glm::radians(0.1f),
-                                     glm::vec3(0, 1, 0)); // allows the object to rotate
         _shader.SetMat4("model", mesh.Transform);
         mesh.Draw();
-//        _wireFrame = !_wireFrame;
     }
 
     glfwSwapBuffers(_window);
@@ -247,12 +262,11 @@ void Application::mousePositionCallback(double xpos, double ypos) {
     }
 
     glm::vec2 moveAmount {
-        xpos - _lastMousePosition.x,
-        _lastMousePosition.y - ypos
+            xpos - _lastMousePosition.x,
+            _lastMousePosition.y - ypos
     };
     _lastMousePosition.x = static_cast<float>(xpos);
     _lastMousePosition.y = static_cast<float>(ypos);
 
     _camera.RotateBy(moveAmount.x * _camera.GetSpeed(), moveAmount.y * _camera.GetSpeed());
 }
-

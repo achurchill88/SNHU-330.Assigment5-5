@@ -11,16 +11,57 @@ struct Vertex{
     glm::vec3 Color {1.f, 1.f, 1.f};
     glm::vec3 Normal {0.f, 0.f, 0.f};
     glm::vec2 Uv {1.f, 1.f};
+    glm::vec2 Uv2 {1.f, 1.f};
 };
 
 struct Shapes {
 
+    static inline std::vector<Vertex> tableTopVertices {
+            // Table top vertices (positions and colors)
+            // Top face
+            { .Position = {-2.0f, 0.2f, -2.0f}, .Color = {1.0f, .0f, 1.0f} }, // Bottom-left
+            { .Position = {2.0f, 0.2f, -2.0f}, .Color = {1.0f, .0f, 1.0f} },  // Bottom-right
+            { .Position = {2.0f, 0.2f, 2.0f}, .Color = {1.0f, .0f, 1.0f} },   // Top-right
+            { .Position = {-2.0f, 0.2f, 2.0f}, .Color = {1.0f, .0f, 1.0f} },  // Top-left
+
+            // Bottom face
+            { .Position = {-2.0f, 0.0f, -2.0f}, .Color = {1.0f, 1.0f, .0f} }, // Bottom-left
+            { .Position = {2.0f, 0.0f, -2.0f}, .Color = {1.0f, 1.0f, .0f} },  // Bottom-right
+            { .Position = {2.0f, 0.0f, 2.0f}, .Color = {1.0f, 1.0f, .0f} },   // Top-right
+            { .Position = {-2.0f, 0.0f, 2.0f}, .Color = {1.0f, 1.0f, .0f} }   // Top-left
+    };
+
+    static inline std::vector<uint32_t> tableTopElements {
+            // Table top indices to form triangles
+            // Top face
+            0, 1, 2, // First triangle
+            2, 3, 0, // Second triangle
+
+            // Bottom face
+            4, 5, 6, // First triangle
+            6, 7, 4, // Second triangle
+
+            // Side faces (two triangles each)
+            0, 4, 7, // Left side face
+            7, 3, 0,
+
+            1, 5, 4, // Back side face
+            4, 0, 1,
+
+            2, 6, 5, // Right side face
+            5, 1, 2,
+
+            3, 7, 6, // Front side face
+            6, 2, 3
+    };
+
+
     static inline std::vector<Vertex> planeVertices {
             // Plane vertices (positions and colors)
-            { .Position = {-0.5f, 0.0f, -0.5f}, .Color = {0.0f, 1.0f, 0.0f} }, // Bottom-left, green
-            { .Position = {0.5f, 0.0f, -0.5f}, .Color = {0.0f, 1.0f, 0.0f} },  // Bottom-right, green
-            { .Position = {0.5f, 0.0f, 0.5f}, .Color = {0.0f, 1.0f, 0.0f} },   // Top-right, green
-            { .Position = {-0.5f, 0.0f, 0.5f}, .Color = {0.0f, 1.0f, 0.0f} }   // Top-left, green
+            { .Position = {-2.0f, 0.0f, -2.0f}, .Color = {0.0f, 1.0f, 0.0f} }, // Bottom-left, green
+            { .Position = {2.0f, 0.0f, -2.0f}, .Color = {0.0f, 1.0f, 0.0f} },  // Bottom-right, green
+            { .Position = {2.0f, 0.0f, 2.0f}, .Color = {0.0f, 1.0f, 0.0f} },   // Top-right, green
+            { .Position = {-2.0f, 0.0f, 2.0f}, .Color = {0.0f, 1.0f, 0.0f} }   // Top-left, green
     };
 
     static inline std::vector<uint32_t> planeElements {

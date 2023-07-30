@@ -43,7 +43,7 @@ void ConicalFrustum::generateVertices()
     Vertex bottomVertex;
     bottomVertex.Position = glm::vec3(0.0f, -height / 2.0f, 0.0f);
     bottomVertex.Normal = glm::vec3(0.0f, -1.0f, 0.0f);
-    bottomVertex.Uv = glm::vec2(0.5f, 0.5f);
+    bottomVertex.Uv = glm::vec2(6.f, 6.f);
     vertices.push_back(bottomVertex);
 
     // Generate side vertices
@@ -63,14 +63,14 @@ void ConicalFrustum::generateVertices()
         sideVertexTop.Position = glm::vec3(xTop, height / 2.0f, zTop);
         sideVertexTop.Normal = glm::normalize(glm::vec3(xTop, (topRadius - bottomRadius) / height, zTop));
         sideVertexTop.Uv = glm::vec2(static_cast<float>(i) / sectors, 1.0f);
-        sideVertexTop.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
+        //sideVertexTop.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
         vertices.push_back(sideVertexTop);
 
         Vertex sideVertexBottom;
         sideVertexBottom.Position = glm::vec3(xBottom, -height / 2.0f, zBottom);
         sideVertexBottom.Normal = glm::normalize(glm::vec3(xBottom, (topRadius - bottomRadius) / height, zBottom));
         sideVertexBottom.Uv = glm::vec2(static_cast<float>(i) / sectors, 0.0f);
-        sideVertexBottom.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
+        //sideVertexBottom.Color = glm::vec3(colorDistribution(gen), colorDistribution(gen), colorDistribution(gen));
         vertices.push_back(sideVertexBottom);
     }
 }
