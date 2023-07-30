@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "ShowcaseApp/external/shared/glm/glm",
+		"source" : "ShowcaseApp/external/shared/glm/glm"
+	}
+}

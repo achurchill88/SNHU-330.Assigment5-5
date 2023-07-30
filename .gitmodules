@@ -1,0 +1,9 @@
+[submodule "ShowcaseApp/external/cmakelibs/glfw"]
+	path = ShowcaseApp/external/cmakelibs/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "ShowcaseApp/external/shared/glm"]
+	path = ShowcaseApp/external/shared/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "ShowcaseApp/external/shared/stb_image/stb"]
+	path = ShowcaseApp/external/shared/stb_image/stb
+	url = git@github.com:nothings/stb.git

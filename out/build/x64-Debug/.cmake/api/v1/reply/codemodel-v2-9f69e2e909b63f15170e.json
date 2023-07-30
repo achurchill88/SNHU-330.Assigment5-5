@@ -1,0 +1,196 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "ShowcaseApp",
+					"childIndexes" : 
+					[
+						2,
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ShowcaseApp-Debug-31ef67b630503fc80673.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "ShowcaseApp",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "ShowcaseApp/external/cmakelibs/glfw",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ShowcaseApp.external.cmakelibs.glfw-Debug-78a073c814bd07c8b069.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "ShowcaseApp/external/cmakelibs/glfw",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "ShowcaseApp/external/cmakelibs/glfw/src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ShowcaseApp.external.cmakelibs.glfw.src-Debug-6f331642e7828abe3c5e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 1,
+					"source" : "ShowcaseApp/external/cmakelibs/glfw/src",
+					"targetIndexes" : 
+					[
+						1,
+						3
+					]
+				},
+				{
+					"build" : "ShowcaseApp/external/shared/glm",
+					"childIndexes" : 
+					[
+						5
+					],
+					"jsonFile" : "directory-ShowcaseApp.external.shared.glm-Debug-4f1efc096c91fcea803f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "ShowcaseApp/external/shared/glm"
+				},
+				{
+					"build" : "ShowcaseApp/external/shared/glm/glm",
+					"jsonFile" : "directory-ShowcaseApp.external.shared.glm.glm-Debug-a481a00d229773271936.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 2,
+					"source" : "ShowcaseApp/external/shared/glm/glm"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "CS330_Showcase_app",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2,
+						3
+					],
+					"name" : "GLFW",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4,
+						5
+					],
+					"name" : "glm",
+					"parentIndex" : 0
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "CS330_Showcase_app::@57f9f6fe00a49726225e",
+					"jsonFile" : "target-CS330_Showcase_app-Debug-bea3505a1e2b376bf2fb.json",
+					"name" : "CS330_Showcase_app",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "glfw::@7e9c24c6f59031ed846c",
+					"jsonFile" : "target-glfw-Debug-ec710c0741180464f5e2.json",
+					"name" : "glfw",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@bba215d7d820a8f9d834",
+					"jsonFile" : "target-uninstall-Debug-af9e367db98e19a795f3.json",
+					"name" : "uninstall",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "update_mappings::@7e9c24c6f59031ed846c",
+					"jsonFile" : "target-update_mappings-Debug-39fbc4a6bbcf37269e15.json",
+					"name" : "update_mappings",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/churc/OneDrive/Documents/GitHub/SNHU-330.AssignmentBasicCameraMovement/out/build/x64-Debug",
+		"source" : "C:/Users/churc/OneDrive/Documents/GitHub/SNHU-330.AssignmentBasicCameraMovement"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}

@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"ShowcaseApp/external/cmakelibs/glfw/src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 394,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"ShowcaseApp/external/cmakelibs/glfw/src/glfw3.lib"
+			],
+			"targetId" : "glfw::@7e9c24c6f59031ed846c",
+			"targetIndex" : 1,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "ShowcaseApp/external/cmakelibs/glfw/src",
+		"source" : "ShowcaseApp/external/cmakelibs/glfw/src"
+	}
+}
