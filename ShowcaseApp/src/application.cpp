@@ -1,19 +1,24 @@
-#include <application.h>  // Include necessary headers
+#include <application.h>
 #include <iostream>
 #include <types.h>
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
-#include <cylinder.h>
-#include "conicalfrustum.h"
+#include <cylinder.h> 
+#include "conicalfrustum.h" 
 #include <stb_image.h>
 
 Application::Application(std::string WindowTitle, int width, int height)
         : _applicationName{std::move(WindowTitle)}, _width{width}, _height{height},
           _camera{width, height, {0.5f, 0.f, 3.f}, true},
-          _cameraLookSpeed {0.02f, 0.02f}
+          _cameraLookSpeed {0.02f, 0.02f},
+          _lightDirection{glm::vec3(0.5f, 1.0f, 0.5f)}, // Default directional light direction
+          _lightColor{glm::vec3(0.0f, 1.0f, 0.0f)}, // Default greenish light color
+          _pointLightPosition{glm::vec3(1.0f, 2.0f, 2.0f)}, // Default point light position
+          _pointLightColor{glm::vec3(1.0f, 1.0f, 1.0f)} // Default white point light color
 {
     // Constructor that initializes the member variables
 }
+
 
 void Application::Run() {
     // Open window
@@ -127,63 +132,21 @@ void Application::setupScene() {
 
     Path texturePath = std::filesystem::current_path() / "assets" / "textures";
     _textures.emplace_back(texturePath / "bottle.jpg");
-    _textures.emplace_back(texturePath / "rootbeerLabel.jpg");
 
-    // Define the scale factor
-    float scaleFactor = 0.90f;
-
-    // Create a cylinder
-    float bottleRadius = 0.25f * scaleFactor; // Reduced radius
-    float bottleHeight = 2.25f * scaleFactor; // Reduced height
-    int bottleSectors = 64;
-    Cylinder cylinder(bottleRadius, bottleHeight, bottleSectors);
-    auto cylinderMesh = cylinder.GetMesh();
-    cylinderMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
-                             glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, bottleHeight / 2.0f, 0.0f)) *
-                             cylinderMesh.Transform;
-    cylinderMesh.SetTextures({_textures[1], _textures[0]});
-
-    _meshes.emplace_back(cylinderMesh);
-
-    // Create a conical frustum for the middle part of the bottle
-    float middleBottleTopRadius = 0.15f * scaleFactor; // Reduced top radius
-    float middleBottleBottomRadius = 0.25f * scaleFactor; // Reduced bottom radius
-    float middleBottleHeight = 0.5f * scaleFactor; // Reduced height
-    int middleBottleSectors = 64;
-    ConicalFrustum middleConicalFrustum(middleBottleTopRadius, middleBottleBottomRadius, middleBottleHeight,
-                                        middleBottleSectors);
-    auto middleConicalFrustumMesh = middleConicalFrustum.GetMesh();
-    middleConicalFrustumMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
-                                         glm::translate(glm::mat4(1.0f),
-                                                        glm::vec3(0.0f, bottleHeight + middleBottleHeight / 2.0f,
-                                                                  0.0f)) * middleConicalFrustumMesh.Transform;
-    middleConicalFrustumMesh.SetTextures({_textures[0]});
-    _meshes.emplace_back(middleConicalFrustumMesh);
-
-    // Create a conical frustum for the top part of the bottle
-    float topBottleTopRadius = 0.1f * scaleFactor; // Reduced top radius
-    float topBottleBottomRadius = 0.15f * scaleFactor; // Reduced bottom radius
-    float topBottleHeight = 1.5f * scaleFactor; // Reduced height
-    int topBottleSectors = 64;
-    ConicalFrustum topConicalFrustum(topBottleTopRadius, topBottleBottomRadius, topBottleHeight, topBottleSectors);
-    auto topConicalFrustumMesh = topConicalFrustum.GetMesh();
-    topConicalFrustumMesh.Transform = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, scaleFactor)) *
-                                      glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,
-                                                                                bottleHeight + middleBottleHeight +
-                                                                                topBottleHeight / 2.0f, 0.0f)) *
-                                      topConicalFrustumMesh.Transform;
-    topConicalFrustumMesh.SetTextures({_textures[0]});
-    _meshes.emplace_back(topConicalFrustumMesh);
-
-    // Plane
-    _meshes.emplace_back(Shapes::tableTopVertices, Shapes::tableTopElements);
-
+    auto& pyramidA = _meshes.emplace_back(Shapes::pyramidVertices, Shapes::pyramidElements);
+    pyramidA.Transform = glm::translate(pyramidA.Transform, glm::vec3(-1.f, 0.f, 0.f));
 
     // Set up the path to the "shaders" directory in the "assets" folder.
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
 
     // Create a Shader object using the vertex and fragment shader files located in the "shaders" directory.
     _shader = Shader(shaderPath / "basic_shader.vert", shaderPath / "basic_shader.frag");
+    
+    // Set up lighting information
+    _lightDirection = glm::normalize(glm::vec3(0.5f, 1.0f, 0.5f)); // Directional light direction
+    _lightColor = glm::vec3(0.0f, 1.0f, 0.0f); // Greenish light color
+    _pointLightPosition = glm::vec3(1.0f, 2.0f, 2.0f); // Point light position
+    _pointLightColor = glm::vec3(1.0f, 1.0f, 1.0f); // White point light color
 
 }
 
@@ -206,6 +169,18 @@ bool Application::draw() {
     _shader.Bind();
     _shader.SetMat4("projection", projection);
     _shader.SetMat4("view", view);
+    _shader.SetVec3("lightDirection", _lightDirection);
+    _shader.SetVec3("lightColor", _lightColor);
+    _shader.SetVec3("pointLightPosition", _pointLightPosition);
+    _shader.SetVec3("pointLightColor", _pointLightColor);
+
+    // Calculate point light attenuation
+    float constant = 1.0f;
+    float linear = 0.01f;
+    float quadratic = 0.01f;
+    _shader.SetFloat("pointLightConstant", constant);
+    _shader.SetFloat("pointLightLinear", linear);
+    _shader.SetFloat("pointLightQuadratic", quadratic);
 
     // Loop through the meshes and draw them with their respective textures
     for (size_t i = 0; i < _meshes.size(); i++) {
@@ -215,8 +190,14 @@ bool Application::draw() {
         for (size_t j = 0; j < textures.size(); j++) {
             glActiveTexture(GL_TEXTURE0 + j);
             textures[j].Bind();
-            _shader.SetInt("tex" + std::to_string(j), j); // Set the uniform value dynamically
+            _shader.SetInt("tex0", j); // Set the texture uniform to GL_TEXTURE0
         }
+
+        // Calculate point light contribution for the mesh
+        glm::vec3 toPointLight = _pointLightPosition - glm::vec3(mesh.Transform[3]);
+        float distanceToPointLight = glm::length(toPointLight);
+        float attenuation = 1.0f / (constant + linear * distanceToPointLight + quadratic * (distanceToPointLight * distanceToPointLight));
+        _shader.SetFloat("pointLightAttenuation", attenuation);
 
         _shader.SetMat4("model", mesh.Transform);
         mesh.Draw();
@@ -225,6 +206,7 @@ bool Application::draw() {
     glfwSwapBuffers(_window);
     return false;
 }
+
 
 void Application::handleInput(float deltaTime) {
 

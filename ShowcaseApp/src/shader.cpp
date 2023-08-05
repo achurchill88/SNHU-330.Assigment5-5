@@ -105,3 +105,17 @@ void Shader::SetInt(const std::string &uniformName, int value) {
         glUniform1i(uniformLoc, value);
     }
 }
+
+void Shader::SetVec3(const std::string& uniformName, const glm::vec3& vec3) {
+    auto uniformLoc = getUniformLocation(uniformName);
+    if (uniformLoc != -1) {
+        glUniform3fv(uniformLoc, 1, glm::value_ptr(vec3));
+    }
+}
+
+void Shader::SetFloat(const std::string& uniformName, float value) {
+    auto uniformLoc = getUniformLocation(uniformName);
+    if (uniformLoc != -1) {
+        glUniform1f(uniformLoc, value);
+    }
+}

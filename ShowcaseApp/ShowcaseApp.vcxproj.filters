@@ -28,6 +28,9 @@
     <Filter Include="Source Files\external\stb">
       <UniqueIdentifier>{2190ef39-7b1f-4133-98c5-f50ba8701991}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\assets">
+      <UniqueIdentifier>{6411ff4f-c954-4cfe-85a1-6be4b5e7b2c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp">
@@ -86,5 +89,13 @@
     <ClInclude Include="include\texture.h">
       <Filter>Source Files\include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\basic_shader.vert">
+      <Filter>Source Files\assets</Filter>
+    </None>
+    <None Include="assets\shaders\basic_shader.frag">
+      <Filter>Source Files\assets</Filter>
+    </None>
   </ItemGroup>
 </Project>

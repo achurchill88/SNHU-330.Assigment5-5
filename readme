@@ -1,0 +1,32 @@
+
+Explanation of changes:
+
+        The basic_shader.frag file
+
+    FragNormal input was added, which is the interpolated normal vector for each fragment (pixel) of the pyramid. It's passed from the vertex shader as a varying value.
+
+    The lightDirection and lightColor are the direction and color of the directional light (key light), respectively. The pointLightPosition and pointLightColor are the position and color of the point light (fill light), respectively. These are the lighting uniforms used for lighting calculations.
+
+    We calculate the diffuse and specular lighting contributions and then combine them with the diffuse texture color. The result is stored in the finalColor variable.
+
+    We apply the point light contribution separately. The attenuation is calculated based on the distance from the point light source to the fragment, and it's used to simulate the light intensity decrease with distance.
+
+The Application class was updated to set the values for these lighting uniforms and then pass them to the shader in the draw() function. 
+Please note: The positions and colors for the directional and point lights can be modified to achieve your desired lighting setup.
+
+Polite Reminder:  you may need to also make sure the pyramid mesh has correct normal vectors for proper lighting calculations. If the mesh does not have normal vectors, you may need to calculate them during mesh loading or in your rendering pipeline.
+
+
+You can modify the values of _lightDirection, _lightColor, _pointLightPosition, and _pointLightColor to achieve your desired lighting setup.
+
+For example, if you want to change the direction of the directional light, you can update _lightDirection like this:
+
+
+
+_lightDirection = glm::normalize(glm::vec3(-0.5f, -1.0f, -0.5f)); // New direction for the directional light
+
+
+Similarly, if you want to change the color of the point light, you can update _pointLightColor like this:
+
+
+_pointLightColor = glm::vec3(1.0f, 0.0f, 0.0f); // Red point light color

@@ -1,49 +1,47 @@
-#pragma once
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <string>
-#include <mesh.h>
-#include <shader.h>
-#include <types.h>
-#include <camera.h>
+#include <vector>
+#include <glm/glm.hpp>
+#include "shader.h"
+#include "camera.h"
+#include "mesh.h"
 #include "texture.h"
+#include <GLFW/glfw3.h>
 
 class Application {
 public:
-    Application();  // Default constructor
-    Application(std::string WindowTitle, int width, int height);  // Constructor with parameters
-
-
-    void Run();  // Function to run the application
+    Application(std::string WindowTitle, int width, int height);
+    void Run();
 
 private:
-    bool openWindow();  // Function to open the application window
+    bool openWindow();
     void setupInputs();
-
-    void setupScene();  // Function to set up the scene
-    bool update(float deltaTime);  // Function to update the application state
-    bool draw();  // Function to draw the scene
-
+    void setupScene();
+    bool update(float deltaTime);
+    bool draw();
     void handleInput(float deltaTime);
-
     void mousePositionCallback(double xpos, double ypos);
 
 private:
-    std::string _applicationName;  // Name of the application window
-    int _width{};  // Width of the application window
-    int _height{};  // Height of the application window
-    GLFWwindow *_window{nullptr};  // Pointer to the GLFW window
-
+    std::string _applicationName;
+    int _width;
+    int _height;
+    GLFWwindow* _window;
     Camera _camera;
-    std::vector<Mesh> _meshes;  // Vector to store meshes in the scene
+    glm::vec2 _cameraLookSpeed;
+    glm::vec3 _lightDirection;
+    glm::vec3 _lightColor;
+    glm::vec3 _pointLightPosition;
+    glm::vec3 _pointLightColor;
+    std::vector<Mesh> _meshes;
     std::vector<Texture> _textures;
-    Shader _shader;  // Shader object for rendering
-    bool _running{false};  // Flag indicating whether the application is running
-
-    bool _firstMouse { false };  // Flag to track the first mouse movement
-    glm::vec2 _lastMousePosition {-1, -1};  // Last recorded mouse position
-    glm::vec2 _cameraLookSpeed {};  // Speed at which the camera looks around
-
-    float _lastFrameTime { 1.f };  // Time of the last frame for deltaTime calculation
+    Shader _shader;
+    bool _running = false;
+    float _lastFrameTime = -1.0f;
+    bool _firstMouse = false;
+    glm::vec2 _lastMousePosition;
 };
+
+#endif // APPLICATION_H
