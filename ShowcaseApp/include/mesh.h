@@ -25,6 +25,8 @@ public:
     }
     void SetTextures(const std::vector<Texture>& textures) { _textures = textures; }
     std::vector<Texture>& GetTextures() { return _textures; }
+    std::vector<Vertex> _vertices;  // Vector to store the vertices of the mesh
+    std::vector<uint32_t> _indices;  // Vector to store the indices of the mesh
 
 private:
     uint32_t _elementCount{ 0 };  // Number of elements (indices)
@@ -33,7 +35,6 @@ private:
     GLuint _elementBufferObject{};  // Element buffer object
     float _height{ 0.0f };  // Height of the mesh
 
-    std::vector<Vertex> _vertices;  // Vector to store the vertices of the mesh
-    std::vector<uint32_t> _indices;  // Vector to store the indices of the mesh
+
     std::vector<Texture> _textures; // Vector to store textures associated with the mesh
 };

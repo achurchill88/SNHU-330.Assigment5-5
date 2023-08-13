@@ -1,4 +1,5 @@
-#include <application.h>  // Include necessary headers
+// application.cpp
+#include <application.h>
 #include <iostream>
 #include <types.h>
 #include <vector>
@@ -88,7 +89,6 @@ bool Application::openWindow() {
     }
     glEnable(GL_DEPTH_TEST);
     return true;  // Return true if window opening and initialization succeed
-
 }
 
 void Application::setupInputs() {
@@ -124,7 +124,7 @@ void Application::setupInputs() {
 
 // Function to set up the scene
 void Application::setupScene() {
-
+    // Load textures and create meshes here
     Path texturePath = std::filesystem::current_path() / "assets" / "textures";
     _textures.emplace_back(texturePath / "bottle.jpg");
     _textures.emplace_back(texturePath / "rootbeerLabel.jpg");
@@ -142,6 +142,7 @@ void Application::setupScene() {
                              glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, bottleHeight / 2.0f, 0.0f)) *
                              cylinderMesh.Transform;
     cylinderMesh.SetTextures({_textures[1], _textures[0]});
+    calculateNormals(cylinderMesh._vertices, cylinderMesh._indices);
 
     _meshes.emplace_back(cylinderMesh);
 
@@ -158,6 +159,7 @@ void Application::setupScene() {
                                                         glm::vec3(0.0f, bottleHeight + middleBottleHeight / 2.0f,
                                                                   0.0f)) * middleConicalFrustumMesh.Transform;
     middleConicalFrustumMesh.SetTextures({_textures[0]});
+    calculateNormals(middleConicalFrustumMesh._vertices, middleConicalFrustumMesh._indices);
     _meshes.emplace_back(middleConicalFrustumMesh);
 
     // Create a conical frustum for the top part of the bottle
@@ -173,20 +175,37 @@ void Application::setupScene() {
                                                                                 topBottleHeight / 2.0f, 0.0f)) *
                                       topConicalFrustumMesh.Transform;
     topConicalFrustumMesh.SetTextures({_textures[0]});
+    calculateNormals(topConicalFrustumMesh._vertices, topConicalFrustumMesh._indices);
     _meshes.emplace_back(topConicalFrustumMesh);
 
     // Plane
-    _meshes.emplace_back(Shapes::tableTopVertices, Shapes::tableTopElements);
-
-
+    auto& plane = _meshes.emplace_back(Shapes::tableTopVertices, Shapes::tableTopElements);
+    calculateNormals(plane._vertices, plane._indices);
+    
     // Set up the path to the "shaders" directory in the "assets" folder.
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
 
     // Create a Shader object using the vertex and fragment shader files located in the "shaders" directory.
     _shader = Shader(shaderPath / "basic_shader.vert", shaderPath / "basic_shader.frag");
 
-}
+    // Set light properties for key light
+    glm::vec3 lightPosition1 = glm::vec3(2.0f, 4.0f, 2.0f); // Change the position as needed
+    glm::vec3 lightColor1 = glm::vec3(0.0f, 1.0f, 0.0f); // Greenish color
+    float lightIntensity1 = 1.0f; // 100% intensity
 
+// Set light properties for fill light
+    glm::vec3 lightPosition2 = glm::vec3(-2.0f, 5.0f, -2.0f); // Change the position as needed
+    float lightIntensity2 = 0.1f; // 10% intensity
+
+// Pass the light properties to the vertex shader
+    _shader.Bind();
+    _shader.SetVec3("lightPosition1", lightPosition1);
+    _shader.SetVec3("lightPosition2", lightPosition2);
+    _shader.SetVec3("lightColor1", lightColor1);
+    _shader.SetFloat("lightIntensity1", lightIntensity1);
+    _shader.SetFloat("lightIntensity2", lightIntensity2);
+
+}
 
 bool Application::update(float deltaTime) {
     glfwPollEvents();
@@ -211,7 +230,7 @@ bool Application::draw() {
     for (size_t i = 0; i < _meshes.size(); i++) {
         Mesh& mesh = _meshes[i];
         std::vector<Texture>& textures = mesh.GetTextures();
-        
+
         for (size_t j = 0; j < textures.size(); j++) {
             glActiveTexture(GL_TEXTURE0 + j);
             textures[j].Bind();
@@ -227,7 +246,6 @@ bool Application::draw() {
 }
 
 void Application::handleInput(float deltaTime) {
-
     auto moveAmount = _camera.GetSpeed() * deltaTime * 4;
 
     if(glfwGetKey(_window, GLFW_KEY_W)){

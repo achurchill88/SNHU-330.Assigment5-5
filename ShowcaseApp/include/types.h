@@ -14,6 +14,29 @@ struct Vertex{
     glm::vec2 Uv2 {1.f, 1.f};
 };
 
+inline void calculateNormals(std::vector<Vertex> &vertices, const std::vector<uint32_t> &elements) {
+    for (size_t i = 0; i < elements.size(); i += 3) {
+        uint32_t index1 = elements[i];
+        uint32_t index2 = elements[i + 1];
+        uint32_t index3 = elements[i + 2];
+
+        // Calculate face normal using cross product
+        glm::vec3 v1 = vertices[index2].Position - vertices[index1].Position;
+        glm::vec3 v2 = vertices[index3].Position - vertices[index1].Position;
+        glm::vec3 faceNormal = glm::normalize(glm::cross(v1, v2));
+
+        // Add the face normal to the normals of the vertices
+        vertices[index1].Normal += faceNormal;
+        vertices[index2].Normal += faceNormal;
+        vertices[index3].Normal += faceNormal;
+    }
+
+    // Normalize the normal vectors of each vertex
+    for (size_t i = 0; i < vertices.size(); i++) {
+        vertices[i].Normal = glm::normalize(vertices[i].Normal);
+    }
+}
+
 struct Shapes {
 
     static inline std::vector<Vertex> tableTopVertices {
